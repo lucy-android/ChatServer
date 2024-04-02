@@ -1,49 +1,19 @@
-const express = require('express'),
-  http = require('http'),
-  app = express(),
-  server = http.createServer(app),
-  { Server } = require('socket.io'),
-  io = new Server(server);
-
-app.get('/', (req, res) => {
-  res.send('Chat Server is running on port 3000');
-});
-
-io.on('connection', (socket) => {
-
-  console.log('user connected')
-
-  socket.on('join', function (userNickname) {
-
-    console.log(userNickname + " : has joined the chat ")
-
-    socket.broadcast.emit('userjoinedthechat', userNickname + " : has joined the chat ")
-
-    socket.on('messagedetection', (senderNickname, messageContent) => {
-
-      //log the message in console 
-
-      console.log(senderNickname + " :" + messageContent)
-      //create a message object
-
-      let message = { "message": messageContent, "senderNickname": senderNickname }
-
-      // send the message to the client side  
-
-      socket.emit('message', message)
-
-    });
-
-
-    socket.on('disconnect', function () {
-      console.log('user has left ')
-      socket.broadcast.emit("userdisconnect", ' user has left')
-    });
-
-  });
-
-});
-
-server.listen(3000, () => {
-  console.log('Node app is running on port 3000');
-});
+const express = require('express')
+const webserver = express()
+ .listen(3000, () => console.log(`Listening on ${3000}`))
+const { WebSocketServer } = require('ws')
+const socketserver = new WebSocketServer({ port: 443 })
+socketserver.on('connection', ws => {
+ console.log('New client connected!')
+ ws.send('connection established')
+ ws.on('close', () => console.log('Client has disconnected!'))
+ ws.on('message', data => {
+   socketserver.clients.forEach(client => {
+     console.log(`distributing message: ${data}`)
+     client.send(`${data}`)
+   })
+ })
+ ws.onerror = function () {
+   console.log('websocket error')
+ }
+})
