@@ -5,12 +5,11 @@ const { WebSocketServer } = require('ws')
 const socketserver = new WebSocketServer({ port: 443 })
 socketserver.on('connection', ws => {
  console.log('New client connected!')
- ws.send('connection established')
  ws.on('close', () => console.log('Client has disconnected!'))
  ws.on('message', data => {
    socketserver.clients.forEach(client => {
-     console.log(`distributing message: ${data}`)
-     client.send(`${data}`)
+     console.log(`${data} has connected to the chat`)
+     client.send(`${data} has connected to the chat`)
    })
  })
  ws.onerror = function () {
