@@ -11,9 +11,9 @@ socketserver.on('connection', ws => {
  ws.on('close', () => console.log('Client has disconnected!'))
  ws.on('message', data => {
    socketserver.clients.forEach(client => {
-    if(data.toString().endsWith("has connected to the chat")){
-      const list = data.toString().split(" ")
-      myList.push(list[0])
+    if(data.toString().startsWith("/")){
+      const list = data.toString().split("/")
+      myList.push(list[1])
     }
      client.send(`${myList}`)
    })
