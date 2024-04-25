@@ -1,1 +1,1 @@
-# ChatServer
+# ChatServer is a backend websocket application
