@@ -21,6 +21,11 @@ socketserver.on('connection', ws => {
     socketserver.clients.forEach(client => {
       console.log("jsonString: ", jsonString)
       console.log("jsonString isGreeting: ", jsonData.isGreeting)
+      client.send(JSON.stringify([{
+        id: 1,
+        isGreeting: true,
+        contents: jsonData.contents
+      }]))
     })
   })
   ws.onerror = function () {
