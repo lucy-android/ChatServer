@@ -4,6 +4,7 @@ const webserver = express()
 
 let userList = []
 
+
 const { WebSocketServer } = require('ws')
 const socketserver = new WebSocketServer({ port: 443 })
 socketserver.on('connection', ws => { 
@@ -13,19 +14,20 @@ socketserver.on('connection', ws => {
     const jsonString = new TextDecoder().decode(new Uint8Array(data))
     const jsonData = JSON.parse(jsonString)
     if (jsonData.isGreeting == true) {
-      userList.push(jsonData.contents)
+      userList.push({
+        "isMessage" : jsonData.isMessage,
+        "isGreeting" : jsonData.isGreeting,
+        "contents": jsonData.contents,
+        "id": userList.length + 1
+    })
+
       const userId = userList.length
-      console.log("userList: ", userList)
+
     }
 
     socketserver.clients.forEach(client => {
-      console.log("jsonString: ", jsonString)
-      console.log("jsonString isGreeting: ", jsonData.isGreeting)
-      client.send(JSON.stringify([{
-        id: 1,
-        isGreeting: true,
-        contents: jsonData.contents
-      }]))
+      console.log("userList: ", JSON.stringify(userList))
+      client.send(JSON.stringify(userList))
     })
   })
   ws.onerror = function () {
