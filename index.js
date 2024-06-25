@@ -3,6 +3,7 @@ const webserver = express()
   .listen(3000, () => console.log(`Listening on ${3000}`))
 
 let userList = []
+let messageList = []
 
 
 const { WebSocketServer } = require('ws')
@@ -13,6 +14,7 @@ socketserver.on('connection', ws => {
   ws.on('message', data => {
     const jsonString = new TextDecoder().decode(new Uint8Array(data))
     const jsonData = JSON.parse(jsonString)
+    console.log("jsonData: ", jsonData)
     if (jsonData.isGreeting == true) {
       userList.push({
         "isMessage" : jsonData.isMessage,
@@ -20,6 +22,7 @@ socketserver.on('connection', ws => {
         "contents": jsonData.contents,
         "id": userList.length + 1
     })
+    
 
       const userId = userList.length
 
