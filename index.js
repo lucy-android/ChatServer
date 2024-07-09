@@ -22,10 +22,6 @@ socketserver.on('connection', ws => {
         "contents": jsonData.contents,
         "id": userList.length + 1
     })
-    
-
-      const userId = userList.length
-
     }
 
     socketserver.clients.forEach(client => {
