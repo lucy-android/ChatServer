@@ -38,6 +38,7 @@ socketserver.on('connection', ws => {
       console.log("userList: ", JSON.stringify(userList))
       console.log("messageList: ", JSON.stringify(messageList))
       client.send(JSON.stringify(userList))
+      client.send(JSON.stringify(messageList))
     })
   })
   ws.onerror = function () {
